@@ -356,27 +356,13 @@ class MLBComparisonGame {
         const container = document.getElementById('mlb-comparison-question-container');
         
         const percentage = Math.round((this.score / this.maxQuestions) * 100);
-        let performanceMessage = '';
-        
-        if (percentage >= 80) {
-            performanceMessage = 'Excellent work! You really know your baseball stats! 🏆';
-        } else if (percentage >= 60) {
-            performanceMessage = 'Good job! You have solid knowledge of player stats! ⚾';
-        } else if (percentage >= 40) {
-            performanceMessage = 'Not bad! Keep following the stats to improve! 📊';
-        } else {
-            performanceMessage = 'Room for improvement! Try watching more games! 🤔';
-        }
         
         container.innerHTML = `
             <div style="text-align: center; padding: 30px;">
-                <h3 style="color: #333; margin-bottom: 20px;">Game Complete!</h3>
+                <h3 style="color: #333; margin-bottom: 30px;">Game Complete</h3>
                 
-                <div style="background: #f8f9fa; border-radius: 12px; padding: 30px; margin: 20px 0; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    <h4 style="margin: 0 0 10px 0; color: #333;">Final Score</h4>
-                    <p style="font-size: 2rem; font-weight: bold; margin: 10px 0; color: #007cba;">${this.score} / ${this.maxQuestions}</p>
-                    <p style="font-size: 1.2rem; margin: 10px 0; color: #666;">${percentage}%</p>
-                    <p style="margin: 20px 0 0 0; color: #555; font-style: italic;">${performanceMessage}</p>
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 40px; margin: 20px 0; max-width: 400px; margin-left: auto; margin-right: auto;">
+                    <p style="font-size: 4rem; font-weight: bold; margin: 0; color: #007cba;">${percentage}%</p>
                 </div>
                 
                 <button onclick="newMLBComparisonGame()" style="
@@ -387,7 +373,7 @@ class MLBComparisonGame {
                     border-radius: 6px; 
                     font-size: 1.1rem; 
                     cursor: pointer;
-                    margin-right: 10px;
+                    margin-top: 20px;
                 ">
                     Play Again
                 </button>
