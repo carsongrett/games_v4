@@ -62,11 +62,11 @@ class MLBComparisonGame {
         this.currentQuestionText = null;
         this.answeredCurrentQuestion = false;
         
-        // Available stats to compare with question phrasing
+        // Available stats to compare with question phrasing (ERA weighted more heavily)
         this.availableStats = [
             { key: 'ERA', name: 'ERA', question: 'Who has a lower ERA?', better: 'lower' },
-            { key: 'InningsPitched', name: 'Innings Pitched', question: 'Who has more innings pitched?', better: 'higher' },
-            { key: 'EarnedRuns', name: 'Earned Runs', question: 'Who has fewer earned runs allowed?', better: 'lower' },
+            { key: 'ERA', name: 'ERA', question: 'Who has a lower ERA?', better: 'lower' },
+            { key: 'ERA', name: 'ERA', question: 'Who has a lower ERA?', better: 'lower' },
             { key: 'Walks', name: 'Walks', question: 'Who has fewer walks allowed?', better: 'lower' },
             { key: 'Strikeouts', name: 'Strikeouts', question: 'Who has more strikeouts?', better: 'higher' },
             { key: 'SOBBRatio', name: 'SO/BB Ratio', question: 'Who has a higher SO/BB ratio?', better: 'higher' }
@@ -227,12 +227,6 @@ class MLBComparisonGame {
                     ">
                         <h4 style="margin: 0 0 10px 0; color: #333; font-size: 1.3rem;">${this.currentPlayerA.Player}</h4>
                         <p style="margin: 5px 0; color: #666; font-size: 1rem;">${this.currentPlayerA.Team}</p>
-                        <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
-                            <p style="margin: 0; font-size: 0.9rem; color: #666;">2025 Season Stats:</p>
-                            <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #888;">
-                                ${this.currentPlayerA.InningsPitched} IP, ${this.currentPlayerA.Strikeouts} K
-                            </p>
-                        </div>
                     </div>
                     
                     <div id="player-b-card" class="player-card" onclick="selectPlayer('B')" style="
@@ -246,12 +240,6 @@ class MLBComparisonGame {
                     ">
                         <h4 style="margin: 0 0 10px 0; color: #333; font-size: 1.3rem;">${this.currentPlayerB.Player}</h4>
                         <p style="margin: 5px 0; color: #666; font-size: 1rem;">${this.currentPlayerB.Team}</p>
-                        <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
-                            <p style="margin: 0; font-size: 0.9rem; color: #666;">2025 Season Stats:</p>
-                            <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #888;">
-                                ${this.currentPlayerB.InningsPitched} IP, ${this.currentPlayerB.Strikeouts} K
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
