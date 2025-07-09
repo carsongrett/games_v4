@@ -74,7 +74,6 @@ class MLBComparisonGame {
     }
 
     async initialize() {
-        this.showMessage('Loading 2025 MLB pitcher data...', 'info');
         await this.loadPitchersData();
     }
 
@@ -123,11 +122,9 @@ class MLBComparisonGame {
                 throw new Error(`Not enough pitchers found (${this.pitchersData.length}). Need at least 10 to play.`);
             }
             
-            this.showMessage(`Successfully loaded ${this.pitchersData.length} MLB pitchers!`, 'success');
-            setTimeout(() => {
-                this.hideMessage();
-                this.startGame();
-            }, 2000);
+            // Start the game immediately
+            this.hideMessage();
+            this.startGame();
             
         } catch (error) {
             console.error('Error loading pitcher data:', error);
