@@ -59,6 +59,7 @@ class MLBComparisonGame {
         this.currentStat = null;
         this.currentStatName = null;
         this.currentQuestionType = null; // 'lower', 'higher', or 'more'
+        this.currentQuestionText = null;
         this.answeredCurrentQuestion = false;
         
         // Available stats to compare with question phrasing
@@ -79,30 +80,44 @@ class MLBComparisonGame {
 
     async loadPitchersData() {
         try {
+            console.log('Fetching pitcher data CSV...');
             const response = await fetch('./data/pitcher_data.csv');
+            console.log('Fetch response:', response.status, response.statusText);
+            
             if (!response.ok) {
-                throw new Error('Failed to load pitcher data CSV');
+                throw new Error(`Failed to load pitcher data CSV: ${response.status} ${response.statusText}`);
             }
             
             const csvText = await response.text();
+            console.log('CSV text length:', csvText.length);
+            
             const lines = csvText.trim().split('\n');
+            console.log('CSV lines:', lines.length);
             
             // Parse CSV data
-            this.pitchersData = lines.slice(1).map(line => {
-                const values = this.parseCSVLine(line);
-                return {
-                    Player: values[0],
-                    Team: values[1],
-                    ERA: parseFloat(values[2]),
-                    InningsPitched: parseFloat(values[3]),
-                    EarnedRuns: parseInt(values[4]),
-                    Walks: parseInt(values[5]),
-                    Strikeouts: parseInt(values[6]),
-                    SOBBRatio: parseFloat(values[7])
-                };
-            });
+            this.pitchersData = lines.slice(1).map((line, index) => {
+                try {
+                    const values = this.parseCSVLine(line);
+                    console.log(`Parsing line ${index + 1}:`, values);
+                    
+                    return {
+                        Player: values[0],
+                        Team: values[1],
+                        ERA: parseFloat(values[2]),
+                        InningsPitched: parseFloat(values[3]),
+                        EarnedRuns: parseInt(values[4]),
+                        Walks: parseInt(values[5]),
+                        Strikeouts: parseInt(values[6]),
+                        SOBBRatio: parseFloat(values[7])
+                    };
+                } catch (parseError) {
+                    console.error(`Error parsing line ${index + 1}:`, line, parseError);
+                    return null;
+                }
+            }).filter(pitcher => pitcher !== null);
 
-            console.log(`Loaded ${this.pitchersData.length} pitchers from CSV`);
+            console.log(`Successfully loaded ${this.pitchersData.length} pitchers from CSV`);
+            console.log('Sample pitcher data:', this.pitchersData[0]);
             
             if (this.pitchersData.length < 10) {
                 throw new Error(`Not enough pitchers found (${this.pitchersData.length}). Need at least 10 to play.`);
@@ -116,7 +131,8 @@ class MLBComparisonGame {
             
         } catch (error) {
             console.error('Error loading pitcher data:', error);
-            this.showMessage('Failed to load pitcher data. Unable to start game.', 'error');
+            this.showMessage(`Failed to load pitcher data: ${error.message}`, 'error');
+            throw error; // Re-throw to be caught by initializeMLBComparisonGame
         }
     }
 
@@ -177,7 +193,7 @@ class MLBComparisonGame {
         this.currentStat = selectedStat.key;
         this.currentStatName = selectedStat.name;
         this.currentQuestionType = selectedStat.better;
-        this.currentQuestion = selectedStat.question;
+        this.currentQuestionText = selectedStat.question;
         
         this.renderQuestion();
     }
@@ -200,7 +216,7 @@ class MLBComparisonGame {
         
         container.innerHTML = `
             <div style="margin-bottom: 30px;">
-                <h3 style="color: #333; margin-bottom: 20px;">${this.currentQuestion}</h3>
+                <h3 style="color: #333; margin-bottom: 20px;">${this.currentQuestionText}</h3>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 0 auto;">
                     <div id="player-a-card" class="player-card" onclick="selectPlayer('A')" style="
@@ -457,15 +473,18 @@ window.newMLBComparisonGame = function() {
 
 async function initializeMLBComparisonGame() {
     try {
+        console.log('Initializing MLB Comparison Game...');
         mlbComparisonGame = new MLBComparisonGame();
+        console.log('Game instance created');
         await mlbComparisonGame.initialize();
+        console.log('Game initialized successfully');
     } catch (error) {
         console.error('Failed to initialize MLB Comparison Game:', error);
         const container = document.getElementById('mlb-comparison-question-container');
         container.innerHTML = `
             <div style="text-align: center; padding: 30px; color: #d32f2f;">
                 <h3>Unable to Load Game</h3>
-                <p>Failed to load 2025 MLB player data from the API.</p>
+                <p>Failed to load 2025 MLB pitcher data.</p>
                 <p style="font-size: 0.9rem; color: #666; margin-top: 20px;">Error: ${error.message}</p>
             </div>
         `;
