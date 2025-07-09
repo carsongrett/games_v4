@@ -1,4 +1,4 @@
-// MLB Player Comparison Game
+// MLB Pitcher Comparison Game
 (function() {
     // Initialize the game when this script loads
     window.initializeGame = function() {
@@ -8,8 +8,8 @@
     function showMLBComparisonGame() {
         document.getElementById('game-container').innerHTML = `
             <div style="text-align: center; max-width: 1000px; margin: 0 auto;" id="mlb-comparison-container">
-                <h2>MLB Player Comparison Challenge</h2>
-                <p style="margin-bottom: 20px; color: #666;">Compare two players and guess who has the higher stat. 10 questions using 2025 season data!</p>
+                <h2>MLB Pitcher Comparison Challenge</h2>
+                <p style="margin-bottom: 20px; color: #666;">Compare two pitchers and guess who has the better stat. 10 questions using 2025 season data!</p>
                 
                 <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
                     <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 2px solid #ddd;">
@@ -36,9 +36,9 @@
                 </div>
 
                 <div style="margin-top: 20px; font-size: 0.9rem; color: #666;">
-                    <p><strong>How to play:</strong> Look at both players and the question, then click on the player you think has the higher stat.</p>
+                    <p><strong>How to play:</strong> Read the question and click on the pitcher who has the better stat.</p>
                     <p>🟢 <strong>Green:</strong> Correct answer | 🔴 <strong>Red:</strong> Wrong answer</p>
-                    <p>Game uses real 2025 MLB season data!</p>
+                    <p>Game uses real 2025 MLB pitcher data!</p>
                 </div>
             </div>
         `;
@@ -49,8 +49,7 @@
 
 class MLBComparisonGame {
     constructor() {
-        this.playersData = [];
-        this.activePlayersData = [];
+        this.pitchersData = [];
         this.currentQuestion = 1;
         this.score = 0;
         this.maxQuestions = 10;
@@ -59,56 +58,65 @@ class MLBComparisonGame {
         this.currentPlayerB = null;
         this.currentStat = null;
         this.currentStatName = null;
+        this.currentQuestionType = null; // 'lower', 'higher', or 'more'
         this.answeredCurrentQuestion = false;
         
-        // Available stats to compare (will be populated from API response)
+        // Available stats to compare with question phrasing
         this.availableStats = [
-            { key: 'avg', name: 'Batting Average' },
-            { key: 'homeRuns', name: 'Home Runs' },
-            { key: 'rbi', name: 'RBIs' },
-            { key: 'runs', name: 'Runs Scored' },
-            { key: 'hits', name: 'Hits' },
-            { key: 'stolenBases', name: 'Stolen Bases' },
-            { key: 'ops', name: 'OPS' },
-            { key: 'doubles', name: 'Doubles' }
+            { key: 'ERA', name: 'ERA', question: 'Who has a lower ERA?', better: 'lower' },
+            { key: 'InningsPitched', name: 'Innings Pitched', question: 'Who has more innings pitched?', better: 'higher' },
+            { key: 'EarnedRuns', name: 'Earned Runs', question: 'Who has fewer earned runs allowed?', better: 'lower' },
+            { key: 'Walks', name: 'Walks', question: 'Who has fewer walks allowed?', better: 'lower' },
+            { key: 'Strikeouts', name: 'Strikeouts', question: 'Who has more strikeouts?', better: 'higher' },
+            { key: 'SOBBRatio', name: 'SO/BB Ratio', question: 'Who has a higher SO/BB ratio?', better: 'higher' }
         ];
     }
 
     async initialize() {
-        this.showMessage('Loading 2025 MLB player data...', 'info');
-        await this.loadPlayersData();
+        this.showMessage('Loading 2025 MLB pitcher data...', 'info');
+        await this.loadPitchersData();
     }
 
-    async loadPlayersData() {
+    async loadPitchersData() {
         try {
-            // First, load the CSV data to get player names
-            const response = await fetch('./data/mlb_players.csv');
+            const response = await fetch('./data/pitcher_data.csv');
             if (!response.ok) {
-                throw new Error('Failed to load player data CSV');
+                throw new Error('Failed to load pitcher data CSV');
             }
             
             const csvText = await response.text();
             const lines = csvText.trim().split('\n');
             
-            // Parse CSV data (same logic as player guess game)
-            this.playersData = lines.slice(1).map(line => {
+            // Parse CSV data
+            this.pitchersData = lines.slice(1).map(line => {
                 const values = this.parseCSVLine(line);
                 return {
                     Player: values[0],
-                    League: values[1],
-                    Team: values[2]
+                    Team: values[1],
+                    ERA: parseFloat(values[2]),
+                    InningsPitched: parseFloat(values[3]),
+                    EarnedRuns: parseInt(values[4]),
+                    Walks: parseInt(values[5]),
+                    Strikeouts: parseInt(values[6]),
+                    SOBBRatio: parseFloat(values[7])
                 };
             });
 
-            console.log(`Loaded ${this.playersData.length} players from CSV`);
-            this.showMessage(`Loading 2025 stats for ${this.playersData.length} players...`, 'info');
+            console.log(`Loaded ${this.pitchersData.length} pitchers from CSV`);
             
-            // Now fetch 2025 stats for each player
-            await this.fetch2025Stats();
+            if (this.pitchersData.length < 10) {
+                throw new Error(`Not enough pitchers found (${this.pitchersData.length}). Need at least 10 to play.`);
+            }
+            
+            this.showMessage(`Successfully loaded ${this.pitchersData.length} MLB pitchers!`, 'success');
+            setTimeout(() => {
+                this.hideMessage();
+                this.startGame();
+            }, 2000);
             
         } catch (error) {
-            console.error('Error loading players data:', error);
-            this.showMessage('Failed to load player data. Unable to start game.', 'error');
+            console.error('Error loading pitcher data:', error);
+            this.showMessage('Failed to load pitcher data. Unable to start game.', 'error');
         }
     }
 
@@ -134,118 +142,7 @@ class MLBComparisonGame {
         return result;
     }
 
-    async fetch2025Stats() {
-        this.activePlayersData = [];
-        let successCount = 0;
-        let errorCount = 0;
-        
-        // Process players in smaller batches to avoid overwhelming the API
-        const batchSize = 5;
-        const totalPlayers = this.playersData.length;
-        
-        for (let i = 0; i < totalPlayers; i += batchSize) {
-            const batch = this.playersData.slice(i, i + batchSize);
-            const batchPromises = batch.map(player => this.fetchPlayerStats(player));
-            
-            const results = await Promise.allSettled(batchPromises);
-            
-            results.forEach((result, index) => {
-                if (result.status === 'fulfilled' && result.value) {
-                    this.activePlayersData.push(result.value);
-                    successCount++;
-                } else {
-                    errorCount++;
-                }
-            });
-            
-            // Update progress
-            const processed = Math.min(i + batchSize, totalPlayers);
-            this.showMessage(`Loading stats... ${processed}/${totalPlayers} players processed. Found ${successCount} active players.`, 'info');
-            
-            // Small delay between batches to be nice to the API
-            if (i + batchSize < totalPlayers) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-        }
-        
-        console.log(`Successfully loaded stats for ${successCount} players, ${errorCount} failed`);
-        
-        if (this.activePlayersData.length < 10) {
-            throw new Error(`Not enough active players found (${this.activePlayersData.length}). Need at least 10 to play.`);
-        }
-        
-        this.showMessage(`Successfully loaded 2025 stats for ${this.activePlayersData.length} active players!`, 'success');
-        setTimeout(() => {
-            this.hideMessage();
-            this.startGame();
-        }, 2000);
-    }
 
-    async fetchPlayerStats(player) {
-        try {
-            // Search for the player first
-            const searchUrl = `https://statsapi.mlb.com/api/v1/people/search?names=${encodeURIComponent(player.Player)}`;
-            const searchResponse = await fetch(searchUrl);
-            
-            if (!searchResponse.ok) {
-                return null;
-            }
-            
-            const searchData = await searchResponse.json();
-            
-            if (!searchData.people || searchData.people.length === 0) {
-                return null;
-            }
-            
-            const playerId = searchData.people[0].id;
-            
-            // Get player stats for 2025
-            const statsUrl = `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=season&season=2025&group=hitting`;
-            const statsResponse = await fetch(statsUrl);
-            
-            if (!statsResponse.ok) {
-                return null;
-            }
-            
-            const statsData = await statsResponse.json();
-            
-            // Check if player has 2025 hitting stats
-            if (!statsData.stats || statsData.stats.length === 0 || 
-                !statsData.stats[0].splits || statsData.stats[0].splits.length === 0) {
-                return null;
-            }
-            
-            const stats = statsData.stats[0].splits[0].stat;
-            
-            // Only include players with meaningful stats (at least 10 at bats)
-            if (!stats.atBats || parseInt(stats.atBats) < 10) {
-                return null;
-            }
-            
-            return {
-                id: playerId,
-                name: player.Player,
-                team: player.Team,
-                league: player.League,
-                stats: {
-                    avg: parseFloat(stats.avg || 0),
-                    homeRuns: parseInt(stats.homeRuns || 0),
-                    rbi: parseInt(stats.rbi || 0),
-                    runs: parseInt(stats.runs || 0),
-                    hits: parseInt(stats.hits || 0),
-                    stolenBases: parseInt(stats.stolenBases || 0),
-                    ops: parseFloat(stats.ops || 0),
-                    doubles: parseInt(stats.doubles || 0),
-                    atBats: parseInt(stats.atBats || 0),
-                    gamesPlayed: parseInt(stats.gamesPlayed || 0)
-                }
-            };
-            
-        } catch (error) {
-            console.warn(`Failed to fetch stats for ${player.Player}:`, error);
-            return null;
-        }
-    }
 
     startGame() {
         this.currentQuestion = 1;
@@ -264,20 +161,23 @@ class MLBComparisonGame {
         // Reset answered flag
         this.answeredCurrentQuestion = false;
         
-        // Select two random players
-        const playerAIndex = Math.floor(Math.random() * this.activePlayersData.length);
+        // Select two random pitchers
+        const playerAIndex = Math.floor(Math.random() * this.pitchersData.length);
         let playerBIndex;
         do {
-            playerBIndex = Math.floor(Math.random() * this.activePlayersData.length);
+            playerBIndex = Math.floor(Math.random() * this.pitchersData.length);
         } while (playerBIndex === playerAIndex);
         
-        this.currentPlayerA = this.activePlayersData[playerAIndex];
-        this.currentPlayerB = this.activePlayersData[playerBIndex];
+        this.currentPlayerA = this.pitchersData[playerAIndex];
+        this.currentPlayerB = this.pitchersData[playerBIndex];
         
         // Select a random stat to compare
         const statIndex = Math.floor(Math.random() * this.availableStats.length);
-        this.currentStat = this.availableStats[statIndex].key;
-        this.currentStatName = this.availableStats[statIndex].name;
+        const selectedStat = this.availableStats[statIndex];
+        this.currentStat = selectedStat.key;
+        this.currentStatName = selectedStat.name;
+        this.currentQuestionType = selectedStat.better;
+        this.currentQuestion = selectedStat.question;
         
         this.renderQuestion();
     }
@@ -285,20 +185,22 @@ class MLBComparisonGame {
     renderQuestion() {
         const container = document.getElementById('mlb-comparison-question-container');
         
-        const playerAValue = this.currentPlayerA.stats[this.currentStat];
-        const playerBValue = this.currentPlayerB.stats[this.currentStat];
+        const playerAValue = this.currentPlayerA[this.currentStat];
+        const playerBValue = this.currentPlayerB[this.currentStat];
         
         // Format the stat value for display
         const formatStat = (value) => {
-            if (this.currentStat === 'avg' || this.currentStat === 'ops') {
-                return value.toFixed(3);
+            if (this.currentStat === 'ERA' || this.currentStat === 'SOBBRatio') {
+                return value.toFixed(2);
+            } else if (this.currentStat === 'InningsPitched') {
+                return value.toFixed(1);
             }
             return value.toString();
         };
         
         container.innerHTML = `
             <div style="margin-bottom: 30px;">
-                <h3 style="color: #333; margin-bottom: 20px;">Who has the higher ${this.currentStatName}?</h3>
+                <h3 style="color: #333; margin-bottom: 20px;">${this.currentQuestion}</h3>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 0 auto;">
                     <div id="player-a-card" class="player-card" onclick="selectPlayer('A')" style="
@@ -310,12 +212,12 @@ class MLBComparisonGame {
                         transition: all 0.3s ease;
                         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                     ">
-                        <h4 style="margin: 0 0 10px 0; color: #333; font-size: 1.3rem;">${this.currentPlayerA.name}</h4>
-                        <p style="margin: 5px 0; color: #666; font-size: 1rem;">${this.currentPlayerA.team} (${this.currentPlayerA.league})</p>
+                        <h4 style="margin: 0 0 10px 0; color: #333; font-size: 1.3rem;">${this.currentPlayerA.Player}</h4>
+                        <p style="margin: 5px 0; color: #666; font-size: 1rem;">${this.currentPlayerA.Team}</p>
                         <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
                             <p style="margin: 0; font-size: 0.9rem; color: #666;">2025 Season Stats:</p>
                             <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #888;">
-                                ${this.currentPlayerA.stats.gamesPlayed} Games, ${this.currentPlayerA.stats.atBats} AB
+                                ${this.currentPlayerA.InningsPitched} IP, ${this.currentPlayerA.Strikeouts} K
                             </p>
                         </div>
                     </div>
@@ -329,12 +231,12 @@ class MLBComparisonGame {
                         transition: all 0.3s ease;
                         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                     ">
-                        <h4 style="margin: 0 0 10px 0; color: #333; font-size: 1.3rem;">${this.currentPlayerB.name}</h4>
-                        <p style="margin: 5px 0; color: #666; font-size: 1rem;">${this.currentPlayerB.team} (${this.currentPlayerB.league})</p>
+                        <h4 style="margin: 0 0 10px 0; color: #333; font-size: 1.3rem;">${this.currentPlayerB.Player}</h4>
+                        <p style="margin: 5px 0; color: #666; font-size: 1rem;">${this.currentPlayerB.Team}</p>
                         <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
                             <p style="margin: 0; font-size: 0.9rem; color: #666;">2025 Season Stats:</p>
                             <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #888;">
-                                ${this.currentPlayerB.stats.gamesPlayed} Games, ${this.currentPlayerB.stats.atBats} AB
+                                ${this.currentPlayerB.InningsPitched} IP, ${this.currentPlayerB.Strikeouts} K
                             </p>
                         </div>
                     </div>
@@ -361,10 +263,17 @@ class MLBComparisonGame {
     selectPlayer(choice) {
         if (this.answeredCurrentQuestion || this.gameOver) return;
         
-        const playerAValue = this.currentPlayerA.stats[this.currentStat];
-        const playerBValue = this.currentPlayerB.stats[this.currentStat];
+        const playerAValue = this.currentPlayerA[this.currentStat];
+        const playerBValue = this.currentPlayerB[this.currentStat];
         
-        const correctChoice = playerAValue >= playerBValue ? 'A' : 'B';
+        // Determine correct choice based on whether we want higher or lower values
+        let correctChoice;
+        if (this.currentQuestionType === 'higher') {
+            correctChoice = playerAValue >= playerBValue ? 'A' : 'B';
+        } else { // 'lower'
+            correctChoice = playerAValue <= playerBValue ? 'A' : 'B';
+        }
+        
         const isCorrect = choice === correctChoice;
         
         this.answeredCurrentQuestion = true;
@@ -390,8 +299,10 @@ class MLBComparisonGame {
         
         // Format the stat values for display
         const formatStat = (value) => {
-            if (this.currentStat === 'avg' || this.currentStat === 'ops') {
-                return value.toFixed(3);
+            if (this.currentStat === 'ERA' || this.currentStat === 'SOBBRatio') {
+                return value.toFixed(2);
+            } else if (this.currentStat === 'InningsPitched') {
+                return value.toFixed(1);
             }
             return value.toString();
         };
