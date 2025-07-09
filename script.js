@@ -83,7 +83,13 @@ function loadGameScript(gameName) {
     script.src = `games/${gameName}.js`;
     script.onload = () => {
         console.log(`${gameName} game loaded successfully`);
-        // Game script should call window.initializeGame() when loaded
+        // Call the game's initialization function
+        if (typeof window.initializeGame === 'function') {
+            window.initializeGame();
+        } else {
+            console.error('window.initializeGame function not found');
+            showGameError(gameName);
+        }
     };
     script.onerror = () => {
         console.error(`Failed to load ${gameName} game`);
