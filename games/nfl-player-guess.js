@@ -17,7 +17,7 @@
     
     function showNFLPlayerGame() {
         document.getElementById('game-container').innerHTML = `
-            <div style="text-align: center; max-width: 1000px; margin: 0 auto;" id="gameContainer">
+            <div style="text-align: center; max-width: 1200px; margin: 0 auto;" id="gameContainer">
                 <h2>Guess the NFL Player</h2>
                 <p style="margin-bottom: 20px; color: #666;">Data is from 2024 season. Hints available on 5th and 7th guess.</p>
                 
@@ -57,8 +57,9 @@
                 <div id="guessesContainer" style="margin-bottom: 20px;">
                     <div id="guessesHeader" style="display: none;">
                         <h3>Your Guesses:</h3>
-                        <div id="desktopHeaders" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; font-weight: bold; background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                        <div id="desktopHeaders" style="display: grid; grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; font-weight: bold; background: #f0f0f0; padding: 10px; border-radius: 5px;">
                             <div>Player</div>
+                            <div>Age</div>
                             <div>Conference</div>
                             <div>Team</div>
                             <div>Position</div>
@@ -66,8 +67,9 @@
                             <div>Rush Yds</div>
                             <div>TDs</div>
                         </div>
-                        <div id="mobileHeaders" style="display: none; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 2px; margin-bottom: 10px; font-weight: bold; background: #f0f0f0; padding: 8px; border-radius: 5px;">
+                        <div id="mobileHeaders" style="display: none; grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 2px; margin-bottom: 10px; font-weight: bold; background: #f0f0f0; padding: 8px; border-radius: 5px;">
                             <div style="text-align: center; min-width: 70px;">Player</div>
+                            <div style="text-align: center; min-width: 40px;">Age</div>
                             <div style="text-align: center; min-width: 50px;">Conf.</div>
                             <div style="text-align: center; min-width: 45px;">Tm.</div>
                             <div style="text-align: center; min-width: 45px;">Pos.</div>
@@ -96,12 +98,12 @@
                                     align-items: center; 
                                     justify-content: center;
                                 }
-                                #mobileHeaders > div:nth-child(5),
-                                #mobileHeaders > div:nth-child(6) {
+                                #mobileHeaders > div:nth-child(6),
+                                #mobileHeaders > div:nth-child(7) {
                                     flex-direction: column !important;
                                 }
                                 #guessesList > div {
-                                    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr !important;
+                                    grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr 1fr 1fr 1fr !important;
                                     gap: 2px !important;
                                 }
                                 #guessesList > div > div {
@@ -116,8 +118,11 @@
                                     min-width: 70px !important;
                                     text-align: left !important;
                                 }
-                                #guessesList > div > div:nth-child(5),
-                                #guessesList > div > div:nth-child(6) {
+                                #guessesList > div > div:nth-child(2) {
+                                    min-width: 40px !important;
+                                }
+                                #guessesList > div > div:nth-child(6),
+                                #guessesList > div > div:nth-child(7) {
                                     min-width: 55px !important;
                                 }
                             }
@@ -137,7 +142,7 @@
                 
                 <div style="margin-top: 20px; font-size: 0.9rem; color: #666;">
                     <p><strong>How to play:</strong> Type to search for players by name, team, or position. Use arrow keys to navigate, Enter to select.</p>
-                    <p>🟢 <strong>Green:</strong> Correct match | 🟡 <strong>Yellow:</strong> Close (within 3 TDs or 200 yards) | ⬜ <strong>Gray:</strong> Wrong</p>
+                    <p>🟢 <strong>Green:</strong> Correct match | 🟡 <strong>Yellow:</strong> Close (within 3 TDs, 200 yards, or 3 years for age) | ⬜ <strong>Gray:</strong> Wrong</p>
                     <p>↑ <strong>Arrow up:</strong> Target is higher | ↓ <strong>Arrow down:</strong> Target is lower</p>
                 </div>
             </div>
@@ -159,12 +164,13 @@
                 const values = parseCSVLine(line);
                 return {
                     Player: values[0],
-                    Conference: values[1],
-                    Team: values[2],
-                    Position: values[3],
-                    RecYds: parseInt(values[4]),
-                    RushYds: parseInt(values[5]),
-                    TDs: parseInt(values[6])
+                    Age: parseInt(values[1]),
+                    Conference: values[2],
+                    Team: values[3],
+                    Position: values[4],
+                    RecYds: parseInt(values[5]),
+                    RushYds: parseInt(values[6]),
+                    TDs: parseInt(values[7])
                 };
             });
             
@@ -457,11 +463,17 @@
         
         guesses.forEach(guess => {
             const row = document.createElement('div');
-            row.style.cssText = 'display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; padding: 10px; border-radius: 5px; border: 1px solid #ddd;';
+            row.style.cssText = 'display: grid; grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; padding: 10px; border-radius: 5px; border: 1px solid #ddd;';
             
             // Player name
             row.appendChild(createCell(guess.Player, '#f8f9fa'));
             
+            // Age
+            row.appendChild(createCell(
+                guess.Age + getArrow(guess.Age, targetPlayer.Age, 3),
+                getNumericMatchColor(guess.Age, targetPlayer.Age, 3)
+            ));
+
             // Conference
             row.appendChild(createCell(guess.Conference, getMatchColor(guess.Conference, targetPlayer.Conference)));
             
