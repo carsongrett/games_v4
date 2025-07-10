@@ -17,13 +17,18 @@
     
     function showNFLPlayerGame() {
         document.getElementById('game-container').innerHTML = `
-            <div style="text-align: center; max-width: 1200px; margin: 0 auto;" id="gameContainer">
-                <h2>Guess the NFL Player</h2>
-                <p style="margin-bottom: 20px; color: #666;">Data is from 2024 season. Hints available on 5th and 7th guess.</p>
+            <div style="text-align: center; max-width: 1200px; margin: 0 auto; padding-top: 10px;" id="gameContainer">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin: 0; font-size: 1.5rem;">NFL Player Guess</h2>
+                    <button onclick="goHome()" style="padding: 8px 16px; background: white; border: 2px solid black; cursor: pointer; font-size: 14px; border-radius: 4px;">
+                        ← Home
+                    </button>
+                </div>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 0.9rem;">2024 season data • Hints on 5th & 7th guess</p>
                 
-                <div style="margin-bottom: 20px;">
-                    <div style="margin-bottom: 10px; position: relative;">
-                        <label for="playerInput" style="display: block; margin-bottom: 5px; font-weight: bold;">Search for a player:</label>
+                <div style="margin-bottom: 15px;">
+                    <div style="margin-bottom: 8px; position: relative;">
+                        <label for="playerInput" style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 1rem;">Search for a player:</label>
                         <input 
                             id="playerInput" 
                             type="text" 
@@ -48,11 +53,11 @@
                     </button>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <span style="font-size: 1.2rem; font-weight: bold;">Guesses: <span id="guessCount">0</span> / ${maxGuesses}</span>
+                <div style="margin-bottom: 15px;">
+                    <span style="font-size: 1.1rem; font-weight: bold;">Guesses: <span id="guessCount">0</span> / ${maxGuesses}</span>
                 </div>
                 
-                <div id="gameStatus" style="margin-bottom: 20px; font-size: 1.1rem; font-weight: bold;"></div>
+                <div id="gameStatus" style="margin-bottom: 15px; font-size: 1rem; font-weight: bold;"></div>
                 
                 <div id="guessesContainer" style="margin-bottom: 20px;">
                     <div id="guessesHeader" style="display: none;">
@@ -88,7 +93,17 @@
                                 #gameContainer {
                                     max-width: none !important;
                                     margin: 0 !important;
-                                    padding: 0 5px !important;
+                                    padding: 5px 5px 0 5px !important;
+                                }
+                                #gameContainer h2 {
+                                    font-size: 1.3rem !important;
+                                }
+                                #gameContainer > div:first-child {
+                                    margin-bottom: 10px !important;
+                                }
+                                #gameContainer > p {
+                                    margin-bottom: 10px !important;
+                                    font-size: 0.8rem !important;
                                 }
                                 #desktopHeaders { display: none !important; }
                                 #mobileHeaders { 
@@ -154,19 +169,16 @@
                     <div id="guessesList"></div>
                 </div>
                 
-                <div style="margin-top: 20px;">
-                    <button id="newGameButton" onclick="startNewGame()" style="padding: 10px 20px; background: white; border: 2px solid black; cursor: pointer; margin-right: 10px; font-size: 16px;">
+                <div style="margin-top: 15px;">
+                    <button id="newGameButton" onclick="startNewGame()" style="padding: 8px 16px; background: white; border: 2px solid black; cursor: pointer; font-size: 14px; border-radius: 4px;">
                         New Game
-                    </button>
-                    <button onclick="goHome()" style="padding: 10px 20px; background: white; border: 2px solid black; cursor: pointer; font-size: 16px;">
-                        Back to Home
                     </button>
                 </div>
                 
-                <div style="margin-top: 20px; font-size: 0.9rem; color: #666;">
-                    <p><strong>How to play:</strong> Type to search for players by name, team, or position. Use arrow keys to navigate, Enter to select.</p>
-                    <p>🟢 <strong>Green:</strong> Correct match | 🟡 <strong>Yellow:</strong> Close (within 3 TDs, 200 yards, or 3 years for age) | ⬜ <strong>Gray:</strong> Wrong</p>
-                    <p>↑ <strong>Arrow up:</strong> Target is higher | ↓ <strong>Arrow down:</strong> Target is lower</p>
+                <div style="margin-top: 15px; font-size: 0.85rem; color: #666; line-height: 1.3;">
+                    <p style="margin: 5px 0;"><strong>How to play:</strong> Search players by name, team, or position. Use arrows to navigate.</p>
+                    <p style="margin: 5px 0;">🟢 <strong>Green:</strong> Correct | 🟡 <strong>Yellow:</strong> Close (±3 TDs, ±200 yards, ±3 years) | ⬜ <strong>Gray:</strong> Wrong</p>
+                    <p style="margin: 5px 0;">↑ <strong>Target higher</strong> | ↓ <strong>Target lower</strong></p>
                 </div>
             </div>
         `;
