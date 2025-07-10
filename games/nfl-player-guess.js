@@ -67,63 +67,93 @@
                             <div>Rush Yds</div>
                             <div>TDs</div>
                         </div>
-                        <div id="mobileHeaders" style="display: none; grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 2px; margin-bottom: 10px; font-weight: bold; background: #f0f0f0; padding: 8px; border-radius: 5px;">
-                            <div style="text-align: center; min-width: 70px;">Player</div>
-                            <div style="text-align: center; min-width: 40px;">Age</div>
-                            <div style="text-align: center; min-width: 50px;">Conf.</div>
-                            <div style="text-align: center; min-width: 45px;">Tm.</div>
-                            <div style="text-align: center; min-width: 45px;">Pos.</div>
-                            <div style="text-align: center; min-width: 55px; display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+                        <div id="mobileHeaders" style="display: none; grid-template-columns: 1.5fr 0.5fr 0.7fr 0.7fr 0.6fr 0.8fr 0.8fr 0.6fr; gap: 1px; margin-bottom: 10px; font-weight: bold; background: #f0f0f0; padding: 8px; border-radius: 5px;">
+                            <div style="text-align: center; min-width: 60px;">Player</div>
+                            <div style="text-align: center; min-width: 28px;">Age</div>
+                            <div style="text-align: center; min-width: 32px;">Conf.</div>
+                            <div style="text-align: center; min-width: 32px;">Tm.</div>
+                            <div style="text-align: center; min-width: 30px;">Pos.</div>
+                            <div style="text-align: center; min-width: 40px; display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
                                 <div>Rec</div>
                                 <div>Yds.</div>
                             </div>
-                            <div style="text-align: center; min-width: 55px; display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+                            <div style="text-align: center; min-width: 40px; display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
                                 <div>Rush</div>
                                 <div>Yds.</div>
                             </div>
-                            <div style="text-align: center; min-width: 45px;">TDs</div>
+                            <div style="text-align: center; min-width: 28px;">TDs</div>
                         </div>
                                                 <style>
                             @media (max-width: 600px) {
                                 #gameContainer {
                                     max-width: none !important;
                                     margin: 0 !important;
-                                    padding: 0 10px !important;
+                                    padding: 0 5px !important;
                                 }
                                 #desktopHeaders { display: none !important; }
-                                #mobileHeaders { display: grid !important; }
+                                #mobileHeaders { 
+                                    display: grid !important; 
+                                    overflow-x: auto !important;
+                                    width: 100% !important;
+                                }
                                 #mobileHeaders > div { 
-                                    min-height: 50px; 
+                                    min-height: 40px; 
                                     display: flex; 
                                     align-items: center; 
                                     justify-content: center;
+                                    font-size: 12px !important;
                                 }
                                 #mobileHeaders > div:nth-child(6),
                                 #mobileHeaders > div:nth-child(7) {
                                     flex-direction: column !important;
                                 }
+                                #guessesContainer {
+                                    overflow-x: auto !important;
+                                    width: 100% !important;
+                                }
                                 #guessesList > div {
-                                    grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr 1fr 1fr 1fr !important;
-                                    gap: 2px !important;
+                                    grid-template-columns: 1.5fr 0.5fr 0.7fr 0.7fr 0.6fr 0.8fr 0.8fr 0.6fr !important;
+                                    gap: 1px !important;
+                                    min-width: 100% !important;
+                                    padding: 5px !important;
+                                    margin-bottom: 3px !important;
                                 }
                                 #guessesList > div > div {
-                                    min-width: 45px !important;
+                                    min-width: 35px !important;
                                     text-align: center !important;
-                                    padding: 6px 2px !important;
-                                    overflow: visible !important;
-                                    text-overflow: clip !important;
-                                    font-size: 14px !important;
+                                    padding: 4px 1px !important;
+                                    overflow: hidden !important;
+                                    text-overflow: ellipsis !important;
+                                    font-size: 11px !important;
+                                    line-height: 1.2 !important;
+                                    border-radius: 2px !important;
                                 }
                                 #guessesList > div > div:first-child {
-                                    min-width: 70px !important;
+                                    min-width: 60px !important;
                                     text-align: left !important;
+                                    font-size: 12px !important;
                                 }
                                 #guessesList > div > div:nth-child(2) {
-                                    min-width: 40px !important;
+                                    min-width: 28px !important;
+                                }
+                                #guessesList > div > div:nth-child(3),
+                                #guessesList > div > div:nth-child(4) {
+                                    min-width: 32px !important;
+                                }
+                                #guessesList > div > div:nth-child(5) {
+                                    min-width: 30px !important;
                                 }
                                 #guessesList > div > div:nth-child(6),
                                 #guessesList > div > div:nth-child(7) {
-                                    min-width: 55px !important;
+                                    min-width: 40px !important;
+                                }
+                                #guessesList > div > div:nth-child(8) {
+                                    min-width: 28px !important;
+                                }
+                                /* Ensure proper scrolling */
+                                #guessesList {
+                                    width: 100% !important;
+                                    overflow-x: visible !important;
                                 }
                             }
                         </style>
