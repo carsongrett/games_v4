@@ -93,17 +93,15 @@
                                 #gameContainer {
                                     max-width: none !important;
                                     margin: 0 !important;
-                                    padding: 3px 5px 0 5px !important;
+                                    padding: 5px !important;
                                 }
+                                /* Hide header completely on mobile */
                                 #gameContainer > div:first-child {
-                                    margin-bottom: 5px !important;
+                                    display: none !important;
                                 }
-                                #gameContainer > div:first-child > div {
-                                    font-size: 1.1rem !important;
-                                }
+                                /* Hide subtitle on mobile */
                                 #gameContainer > p {
-                                    margin-bottom: 5px !important;
-                                    font-size: 0.75rem !important;
+                                    display: none !important;
                                 }
                                 #desktopHeaders { display: none !important; }
                                 #mobileHeaders { 
@@ -163,6 +161,10 @@
                                 #guessesList {
                                     min-width: 360px !important;
                                 }
+                                /* Show mobile home button */
+                                #mobileHomeButton {
+                                    display: inline-block !important;
+                                }
                             }
                         </style>
                     </div>
@@ -172,6 +174,9 @@
                 <div style="margin-top: 8px;">
                     <button id="newGameButton" onclick="startNewGame()" style="padding: 6px 12px; background: white; border: 1px solid #ccc; cursor: pointer; font-size: 13px; border-radius: 3px;">
                         New Game
+                    </button>
+                    <button id="mobileHomeButton" onclick="goHome()" style="display: none; padding: 6px 12px; background: white; border: 1px solid #007cba; color: #007cba; cursor: pointer; font-size: 13px; border-radius: 3px; margin-left: 8px;">
+                        ← Home
                     </button>
                 </div>
                 
