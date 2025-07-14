@@ -1,3 +1,6 @@
+/* Import CSS variables */
+@import url('./src/shared/styles/variables.css');
+
 * {
     margin: 0;
     padding: 0;
@@ -5,17 +8,17 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #ffffff;
-    color: #000000;
-    line-height: 1.6;
+    font-family: var(--font-family-primary);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: var(--line-height-normal);
     min-height: 100vh;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
-    padding: 20px;
+    padding: var(--container-padding);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -23,20 +26,20 @@ body {
 
 header {
     text-align: center;
-    margin-bottom: 40px;
-    padding: 20px 0;
-    border-bottom: 2px solid #000000;
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl) 0;
+    border-bottom: 2px solid var(--border-color);
 }
 
 header h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-sm);
 }
 
 header p {
-    font-size: 1.2rem;
-    color: #666666;
+    font-size: var(--font-size-xl);
+    color: var(--text-secondary);
 }
 
 main {
@@ -49,108 +52,185 @@ main {
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
+    gap: var(--spacing-xl);
     width: 100%;
     max-width: 800px;
 }
 
 .game-card {
-    background-color: #ffffff;
-    border: 2px solid #000000;
-    padding: 30px;
+    background-color: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    padding: var(--spacing-xl);
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition-base);
     min-height: 150px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-base);
 }
 
 .game-card:hover {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .game-card h2 {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-    font-weight: bold;
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-sm);
+    font-weight: var(--font-weight-bold);
 }
 
 .game-card p {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
     opacity: 0.8;
 }
 
 footer {
     text-align: center;
-    margin-top: 40px;
-    padding: 20px 0;
-    border-top: 2px solid #000000;
-    color: #666666;
+    margin-top: var(--spacing-2xl);
+    padding: var(--spacing-xl) 0;
+    border-top: 2px solid var(--border-color);
+    color: var(--text-secondary);
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .games-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    header h1 {
-        font-size: 2rem;
-    }
-    
-    .game-card {
-        padding: 20px;
-        min-height: 120px;
-    }
+/* Action Buttons */
+.action-button {
+    padding: var(--button-padding-y) var(--button-padding-x);
+    font-size: var(--button-font-size);
+    font-weight: var(--button-font-weight);
+    border: 2px solid var(--primary-color);
+    border-radius: var(--button-border-radius);
+    cursor: pointer;
+    transition: var(--button-transition);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
 }
 
-/* MLB Standings Game Styles */
+.action-button.primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.action-button.primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.action-button.secondary {
+    background-color: var(--white);
+    color: var(--primary-color);
+}
+
+.action-button.secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+/* Loading States */
+.game-loading-container {
+    text-align: center;
+    border: 2px solid var(--border-color);
+    padding: var(--spacing-2xl);
+    border-radius: var(--border-radius-lg);
+    background-color: var(--bg-secondary);
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--gray-300);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-lg);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error States */
+.error-container {
+    text-align: center;
+    padding: var(--spacing-xl);
+    background-color: var(--error-light);
+    border: 1px solid var(--error-border);
+    border-radius: var(--border-radius-lg);
+    color: var(--error-dark);
+}
+
+.error-icon {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-base);
+}
+
+.error-container h2 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--error-dark);
+}
+
+.error-container p {
+    margin-bottom: var(--spacing-base);
+}
+
+.error-details {
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+}
+
+/* Game Message Styles */
 .game-message {
-    padding: 15px;
-    border-radius: 8px;
-    font-weight: bold;
-    margin: 10px 0;
+    padding: var(--spacing-base);
+    border-radius: var(--border-radius-base);
+    font-weight: var(--font-weight-semibold);
+    margin: var(--spacing-sm) 0;
     text-align: center;
 }
 
 .game-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: var(--success-light);
+    color: var(--success-dark);
+    border: 1px solid var(--success-border);
 }
 
 .game-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background-color: var(--error-light);
+    color: var(--error-dark);
+    border: 1px solid var(--error-border);
 }
 
 .game-message.info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
+    background-color: var(--info-light);
+    color: var(--info-dark);
+    border: 1px solid var(--info-border);
 }
 
+/* League Standings Game Styles */
 .league-standings {
-    border: 2px solid #000;
-    border-radius: 8px;
-    padding: 20px;
-    background-color: #f8f9fa;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    background-color: var(--bg-secondary);
 }
 
 .league-header {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: var(--spacing-lg);
 }
 
 .league-header h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #000;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
 }
 
 .standings-table {
@@ -158,51 +238,47 @@ footer {
 }
 
 .standings-header {
-    display: grid;
-    grid-template-columns: 60px 1fr 80px;
-    gap: 10px;
-    padding: 10px;
-    background-color: #000;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 4px;
-    margin-bottom: 5px;
+    background-color: var(--bg-tertiary);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-base);
+    margin-bottom: var(--spacing-sm);
 }
 
 .standings-row {
     display: grid;
-    grid-template-columns: 60px 1fr 80px;
-    gap: 10px;
-    padding: 10px;
-    margin-bottom: 3px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    background-color: #fff;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-base);
+    margin-bottom: var(--spacing-xs);
+    transition: var(--transition-base);
 }
 
 .standings-row.revealed-correct {
-    background-color: #d4edda;
-    border-color: #28a745;
+    background-color: var(--success-light);
+    border: 1px solid var(--success-border);
 }
 
 .standings-row.revealed-incorrect {
-    background-color: #f8d7da;
-    border-color: #dc3545;
+    background-color: var(--error-light);
+    border: 1px solid var(--error-border);
 }
 
 .standings-row.guessed-wrong {
-    background-color: #fff3cd;
-    border-color: #ffc107;
+    background-color: var(--warning-light);
+    border: 1px solid var(--warning-border);
 }
 
 .rank-col, .team-col, .record-col {
     display: flex;
     align-items: center;
-    font-weight: bold;
+    justify-content: center;
+    font-weight: var(--font-weight-medium);
 }
 
 .rank-col {
-    justify-content: center;
+    font-weight: var(--font-weight-bold);
 }
 
 .team-col {
@@ -210,124 +286,168 @@ footer {
 }
 
 .record-col {
-    justify-content: center;
+    font-family: var(--font-family-mono);
 }
 
 .hidden-team-btn {
-    background-color: #f8f9fa;
-    border: 2px solid #6c757d;
-    color: #6c757d;
-    padding: 8px 12px;
-    border-radius: 4px;
+    background-color: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    padding: var(--spacing-sm) var(--spacing-base);
+    border-radius: var(--border-radius-base);
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    transition: var(--transition-base);
+    font-weight: var(--font-weight-medium);
     width: 100%;
+    text-align: center;
 }
 
 .hidden-team-btn:hover {
-    background-color: #6c757d;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
 }
 
 .revealed-team {
-    font-weight: bold;
-    padding: 8px 12px;
-    border-radius: 4px;
-    display: inline-block;
-    width: 100%;
+    background-color: var(--bg-secondary);
+    padding: var(--spacing-sm) var(--spacing-base);
+    border-radius: var(--border-radius-base);
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    border: 1px solid var(--border-light);
 }
 
 .correct-guess {
-    background-color: #28a745;
-    color: #fff;
+    background-color: var(--success-light);
+    color: var(--success-dark);
 }
 
 .incorrect-guess {
-    background-color: #dc3545;
-    color: #fff;
+    background-color: var(--error-light);
+    color: var(--error-dark);
 }
 
-/* Responsive design for MLB standings */
-@media (max-width: 768px) {
-    #mlb-standings-grid {
-        grid-template-columns: 1fr !important;
-        gap: 20px;
-    }
-    
-    .league-standings {
-        padding: 15px;
-    }
-    
-    .standings-header {
-        grid-template-columns: 50px 1fr 70px;
-        gap: 8px;
-        padding: 8px;
-        font-size: 14px;
-    }
-    
-    .standings-row {
-        grid-template-columns: 50px 1fr 70px;
-        gap: 8px;
-        padding: 8px;
-    }
-    
-    .hidden-team-btn {
-        font-size: 12px;
-        padding: 6px 8px;
-    }
-    
-    .revealed-team {
-        font-size: 12px;
-        padding: 6px 8px;
-    }
-}
-
-/* MLB Division Challenge Styles */
+/* Division Standings */
 .division-standings {
-    border: 2px solid #000;
-    border-radius: 8px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    min-height: 200px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
 }
 
 .division-header {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: var(--spacing-base);
 }
 
 .division-header h3 {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #000;
-    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
 }
 
-/* Responsive design for MLB division challenge */
+/* Responsive design */
 @media (max-width: 768px) {
+    .games-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    header h1 {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .game-card {
+        padding: var(--spacing-lg);
+        min-height: 120px;
+    }
+    
+    #mlb-standings-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .league-standings {
+        padding: var(--spacing-base);
+    }
+    
+    .standings-header {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-xs);
+    }
+    
+    .standings-row {
+        padding: var(--spacing-xs);
+        font-size: var(--font-size-sm);
+    }
+    
+    .hidden-team-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    .revealed-team {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
     #mlb-division-grid {
-        grid-template-columns: 1fr !important;
-        gap: 15px;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
     }
     
     .division-standings {
-        padding: 12px;
-        min-height: 180px;
+        padding: var(--spacing-base);
     }
     
     .division-header h3 {
-        font-size: 1.1rem;
+        font-size: var(--font-size-base);
     }
 }
 
 @media (max-width: 480px) {
+    .container {
+        padding: var(--spacing-base);
+    }
+    
     .division-standings {
-        padding: 10px;
-        min-height: 160px;
+        padding: var(--spacing-sm);
     }
     
     .division-header h3 {
-        font-size: 1rem;
+        font-size: var(--font-size-sm);
+    }
+    
+    .action-button {
+        padding: var(--spacing-sm) var(--spacing-base);
+        font-size: var(--font-size-sm);
+    }
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus management */
+*:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 } 

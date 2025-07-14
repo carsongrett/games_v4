@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the MLB Player</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="mlb-player-guess.css">
+</head>
+<body>
+    <div class="container">
+        <header class="game-header">
+            <h1>Guess the MLB Player</h1>
+            <p>Data is from 2025. Hints available on 5th and 7th guess.</p>
+        </header>
+        
+        <main class="game-main">
+            <div class="search-section">
+                <div class="input-wrapper">
+                    <label for="playerInput" class="search-label">Search for a player:</label>
+                    <input 
+                        id="playerInput" 
+                        type="text" 
+                        placeholder="Type player name, team, or league..."
+                        class="search-input"
+                        autocomplete="off"
+                        aria-describedby="search-help"
+                    />
+                    <div id="search-help" class="sr-only">
+                        Type to search for players by name, team, or league. Use arrow keys to navigate results.
+                    </div>
+                    <div id="playerDropdown" class="dropdown" role="listbox" aria-label="Player suggestions">
+                    </div>
+                </div>
+                
+                <div class="hints-section">
+                    <span class="hints-label">Hints:</span>
+                    <button id="teamHintButton" class="hint-button" disabled aria-describedby="team-hint-help">
+                        Team
+                    </button>
+                    <button id="initialHintButton" class="hint-button" disabled aria-describedby="initial-hint-help">
+                        Initial
+                    </button>
+                    <div id="team-hint-help" class="sr-only">Team hint available after 4 wrong guesses</div>
+                    <div id="initial-hint-help" class="sr-only">Initial hint available after 6 wrong guesses</div>
+                </div>
+                
+                <button id="guessButton" class="guess-button" disabled>
+                    Make Guess
+                </button>
+            </div>
+            
+            <div class="game-status">
+                <div class="guess-counter">
+                    <span>Guesses: <span id="guessCount">0</span> / <span id="maxGuesses">8</span></span>
+                </div>
+                <div id="gameStatus" class="game-message" role="alert"></div>
+            </div>
+            
+            <div class="guesses-section">
+                <div id="guessesHeader" class="guesses-header" hidden>
+                    <h2>Your Guesses:</h2>
+                    <div class="guesses-grid-header">
+                        <div>Player</div>
+                        <div>League</div>
+                        <div>Team</div>
+                        <div>Age</div>
+                        <div>Runs</div>
+                        <div>SB</div>
+                        <div>HR</div>
+                        <div>OPS</div>
+                    </div>
+                </div>
+                <div id="guessesList" class="guesses-list" role="table" aria-label="Guess results">
+                </div>
+            </div>
+        </main>
+        
+        <footer class="game-footer">
+            <div class="button-group">
+                <button id="newGameButton" class="action-button secondary">New Game</button>
+                <button id="homeButton" class="action-button secondary">Back to Home</button>
+            </div>
+            
+            <div class="instructions">
+                <h3>How to play:</h3>
+                <ul>
+                    <li>Type to search for players by name, team, or league</li>
+                    <li>Use arrow keys to navigate, Enter to select</li>
+                    <li><span class="color-indicator correct">🟢 Green:</span> Correct match</li>
+                    <li><span class="color-indicator close">🟡 Yellow:</span> Close (within 3 years, 10 runs, 5 SB/HR, 0.050 OPS)</li>
+                    <li><span class="color-indicator wrong">⬜ Gray:</span> Wrong</li>
+                    <li><span class="arrow-indicator">↑ Arrow up:</span> Target is higher</li>
+                    <li><span class="arrow-indicator">↓ Arrow down:</span> Target is lower</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Load shared components first -->
+    <script src="../src/shared/components/SearchDropdown.js"></script>
+    <script src="../src/shared/utils/csvParser.js"></script>
+    
+    <!-- Load the refactored game -->
+    <script src="mlb-player-guess-refactored.js"></script>
+</body>
+</html> 

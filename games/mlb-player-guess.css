@@ -1,0 +1,465 @@
+/* MLB Player Guess Game Styles */
+
+/* CSS Variables for consistent theming */
+:root {
+  --primary-color: #007cba;
+  --secondary-color: #6bb6ff;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-bg: #f8f9fa;
+  --border-color: #ccc;
+  --text-muted: #666;
+  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  --border-radius: 4px;
+  --transition: all 0.3s ease;
+}
+
+/* Layout */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.game-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.game-header h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.game-header p {
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+/* Search Section */
+.search-section {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.search-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.search-input {
+  width: 320px;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  outline: none;
+  transition: var(--transition);
+}
+
+.search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 124, 186, 0.2);
+}
+
+.search-input:disabled {
+  background-color: var(--light-bg);
+  cursor: not-allowed;
+}
+
+/* Dropdown */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  max-height: 250px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1000;
+  box-shadow: var(--box-shadow);
+}
+
+.dropdown.visible {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: var(--transition);
+}
+
+.dropdown-item:hover,
+.dropdown-item.highlighted {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-empty {
+  padding: 12px 16px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Hints Section */
+.hints-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.hints-label {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.hint-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  min-width: 80px;
+}
+
+.hint-button:disabled {
+  background-color: var(--border-color);
+  color: white;
+  cursor: not-allowed;
+}
+
+.hint-button:not(:disabled) {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.hint-button:not(:disabled):hover {
+  background-color: var(--primary-color);
+}
+
+.hint-button.used {
+  background-color: #6c757d;
+}
+
+/* Guess Button */
+.guess-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+}
+
+.guess-button:disabled {
+  background-color: var(--border-color);
+  color: white;
+  cursor: not-allowed;
+}
+
+.guess-button:not(:disabled) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.guess-button:not(:disabled):hover {
+  background-color: #005a9e;
+}
+
+/* Game Status */
+.game-status {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.guess-counter {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.game-message {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin: 10px 0;
+  min-height: 20px;
+}
+
+.game-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.game-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Guesses Section */
+.guesses-section {
+  margin-bottom: 30px;
+}
+
+.guesses-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.guesses-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.guesses-grid-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  font-weight: 600;
+  background-color: var(--light-bg);
+  padding: 12px;
+  border-radius: var(--border-radius);
+  text-align: center;
+}
+
+.guesses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.guess-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background-color: white;
+}
+
+.guess-cell {
+  padding: 8px;
+  text-align: center;
+  border-radius: calc(var(--border-radius) / 2);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+}
+
+.guess-cell.player-name {
+  text-align: left;
+  background-color: var(--light-bg);
+}
+
+.guess-cell.correct {
+  background-color: #90EE90;
+}
+
+.guess-cell.close {
+  background-color: #FFD700;
+}
+
+.guess-cell.wrong {
+  background-color: #D3D3D3;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.action-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: 2px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+}
+
+.action-button.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.action-button.secondary {
+  background-color: white;
+  color: var(--primary-color);
+}
+
+.action-button:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.action-button.success {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+}
+
+/* Instructions */
+.instructions {
+  background-color: var(--light-bg);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.instructions h3 {
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.instructions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.instructions li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.instructions li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.color-indicator,
+.arrow-indicator {
+  font-weight: 600;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus management */
+*:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .input-wrapper {
+    width: 100%;
+  }
+  
+  .dropdown {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .hints-section {
+    flex-wrap: wrap;
+  }
+  
+  .guesses-grid-header {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 4px;
+    font-size: 12px;
+    padding: 8px;
+  }
+  
+  .guess-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 4px;
+    padding: 8px;
+  }
+  
+  .guess-cell {
+    font-size: 12px;
+    padding: 4px;
+    min-height: 35px;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .guesses-grid-header {
+    font-size: 10px;
+    padding: 6px;
+  }
+  
+  .guess-cell {
+    font-size: 10px;
+    padding: 3px;
+    min-height: 30px;
+  }
+} 

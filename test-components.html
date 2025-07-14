@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Test Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .test-section h2 {
+            margin-bottom: 1rem;
+            color: #007cba;
+        }
+        
+        .test-result {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .test-result.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .test-result.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Component Test Page</h1>
+            <p>Testing shared components and utilities</p>
+        </header>
+        
+        <main>
+            <div class="test-section">
+                <h2>SearchDropdown Component Test</h2>
+                <div class="input-wrapper">
+                    <label for="testInput">Test Search:</label>
+                    <input 
+                        id="testInput" 
+                        type="text" 
+                        placeholder="Type to search..."
+                        class="search-input"
+                    />
+                    <div id="testDropdown" class="dropdown"></div>
+                </div>
+                <div id="searchTestResult"></div>
+            </div>
+            
+            <div class="test-section">
+                <h2>CSV Parser Test</h2>
+                <button id="testCsvButton" class="action-button primary">Test CSV Parsing</button>
+                <div id="csvTestResult"></div>
+            </div>
+            
+            <div class="test-section">
+                <h2>CSS Variables Test</h2>
+                <div style="background-color: var(--primary-color); color: white; padding: 1rem; border-radius: var(--border-radius-base);">
+                    This should be styled with CSS variables
+                </div>
+                <div id="cssTestResult"></div>
+            </div>
+        </main>
+        
+        <footer>
+            <button onclick="window.location.href='index.html'" class="action-button secondary">Back to Home</button>
+        </footer>
+    </div>
+    
+    <!-- Load shared components -->
+    <script src="src/shared/components/SearchDropdown.js"></script>
+    <script src="src/shared/utils/csvParser.js"></script>
+    
+    <script>
+        // Test SearchDropdown
+        function testSearchDropdown() {
+            try {
+                const testData = [
+                    { name: 'John Doe', team: 'Yankees' },
+                    { name: 'Jane Smith', team: 'Red Sox' },
+                    { name: 'Bob Johnson', team: 'Blue Jays' }
+                ];
+                
+                const searchDropdown = new SearchDropdown({
+                    inputId: 'testInput',
+                    dropdownId: 'testDropdown',
+                    placeholder: 'Search test data...',
+                    onSelect: (item) => {
+                        document.getElementById('searchTestResult').innerHTML = 
+                            `<div class="test-result success">Selected: ${item.name} (${item.team})</div>`;
+                    },
+                    onFilter: (query) => {
+                        return testData.filter(item => 
+                            item.name.toLowerCase().includes(query.toLowerCase()) ||
+                            item.team.toLowerCase().includes(query.toLowerCase())
+                        );
+                    },
+                    formatItem: (item) => `${item.name} (${item.team})`,
+                    getDisplayValue: (item) => item.name
+                });
+                
+                document.getElementById('searchTestResult').innerHTML = 
+                    '<div class="test-result success">SearchDropdown component loaded successfully!</div>';
+                    
+            } catch (error) {
+                document.getElementById('searchTestResult').innerHTML = 
+                    `<div class="test-result error">SearchDropdown test failed: ${error.message}</div>`;
+            }
+        }
+        
+        // Test CSV Parser
+        async function testCsvParser() {
+            try {
+                const csvText = `Player,League,Team,Age,Runs,SB,HR,OPS
+John Doe,AL,Yankees,25,80,15,20,0.850
+Jane Smith,NL,Red Sox,28,75,10,18,0.820`;
+                
+                const parser = new CSVParser();
+                const result = await parser.parse(csvText, CSV_SCHEMAS.MLB_PLAYER);
+                
+                document.getElementById('csvTestResult').innerHTML = 
+                    `<div class="test-result success">CSV Parser test successful! Parsed ${result.length} players.</div>
+                     <pre>${JSON.stringify(result, null, 2)}</pre>`;
+                     
+            } catch (error) {
+                document.getElementById('csvTestResult').innerHTML = 
+                    `<div class="test-result error">CSV Parser test failed: ${error.message}</div>`;
+            }
+        }
+        
+        // Test CSS Variables
+        function testCssVariables() {
+            const testElement = document.createElement('div');
+            testElement.style.backgroundColor = 'var(--primary-color)';
+            document.body.appendChild(testElement);
+            
+            const computedStyle = window.getComputedStyle(testElement);
+            const bgColor = computedStyle.backgroundColor;
+            
+            document.body.removeChild(testElement);
+            
+            if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
+                document.getElementById('cssTestResult').innerHTML = 
+                    '<div class="test-result success">CSS Variables are working correctly!</div>';
+            } else {
+                document.getElementById('cssTestResult').innerHTML = 
+                    '<div class="test-result error">CSS Variables test failed</div>';
+            }
+        }
+        
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            testSearchDropdown();
+            testCssVariables();
+            
+            document.getElementById('testCsvButton').addEventListener('click', testCsvParser);
+        });
+    </script>
+</body>
+</html> 
