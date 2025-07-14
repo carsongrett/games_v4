@@ -19,7 +19,7 @@
         document.getElementById('game-container').innerHTML = `
             <div style="text-align: center; max-width: 1200px; margin: 0 auto; padding-top: 5px;" id="gameContainer">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div style="margin: 0; font-size: 1.2rem; font-weight: normal;">NFL Player Guess</div>
+                    <h2 style="margin: 0; font-size: 1.3rem;">NFL Player Guess</h2>
                     <button onclick="goHome()" style="padding: 6px 12px; background: white; border: 1px solid #ccc; cursor: pointer; font-size: 13px; border-radius: 4px;">
                         ← Home
                     </button>
@@ -28,7 +28,7 @@
                 
                 <div style="margin-bottom: 10px;">
                     <div style="margin-bottom: 6px; position: relative;">
-                        <label for="playerInput" style="display: block; margin-bottom: 3px; font-weight: normal; font-size: 0.95rem;">Search for a player:</label>
+                        <label for="playerInput" style="display: block; margin-bottom: 3px; font-weight: 600; font-size: 1rem;">Search for a player:</label>
                         <input 
                             id="playerInput" 
                             type="text" 
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px;">
-                        <span style="font-weight: normal; color: #666; font-size: 0.9rem;">Hints:</span>
+                        <span style="font-weight: 600; color: #666; font-size: 0.95rem;">Hints:</span>
                         <button id="teamHintButton" onclick="useTeamHint()" disabled style="padding: 6px 12px; background: #ccc; color: white; border: none; cursor: not-allowed; font-size: 14px; border-radius: 3px;">
                             Team
                         </button>
@@ -54,14 +54,14 @@
                 </div>
                 
                 <div style="margin-bottom: 8px;">
-                    <span style="font-size: 1rem; font-weight: normal;">Guesses: <span id="guessCount">0</span> / ${maxGuesses}</span>
+                    <span style="font-size: 1.1rem; font-weight: 600;">Guesses: <span id="guessCount">0</span> / ${maxGuesses}</span>
                 </div>
                 
-                <div id="gameStatus" style="margin-bottom: 8px; font-size: 0.95rem; font-weight: normal;"></div>
+                <div id="gameStatus" style="margin-bottom: 8px; font-size: 1rem; font-weight: 600;"></div>
                 
                 <div id="guessesContainer" style="margin-bottom: 12px;">
                     <div id="guessesHeader" style="display: none;">
-                        <div style="font-size: 1rem; font-weight: normal; margin-bottom: 8px;">Your Guesses:</div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Your Guesses:</h3>
                         <div id="desktopHeaders" style="display: grid; grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; font-weight: bold; background: #f0f0f0; padding: 10px; border-radius: 5px;">
                             <div>Player</div>
                             <div>Age</div>
@@ -180,7 +180,7 @@
                     </button>
                 </div>
                 
-                <div style="margin-top: 10px; font-size: 0.8rem; color: #666; line-height: 1.2;">
+                <div style="margin-top: 10px; font-size: 0.85rem; color: #666; line-height: 1.3;">
                     <p style="margin: 5px 0;"><strong>How to play:</strong> Search players by name, team, or position. Use arrows to navigate.</p>
                     <p style="margin: 5px 0;">🟢 <strong>Green:</strong> Correct | 🟡 <strong>Yellow:</strong> Close (±3 TDs, ±200 yards, ±3 years) | ⬜ <strong>Gray:</strong> Wrong</p>
                     <p style="margin: 5px 0;">↑ <strong>Target higher</strong> | ↓ <strong>Target lower</strong></p>
